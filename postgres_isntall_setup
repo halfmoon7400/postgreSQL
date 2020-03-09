@@ -1,0 +1,10 @@
+도커에서 시험하는 경우
+
+apt update
+apt upgrade
+apt install postgresql postgresql-contrib sudo wget
+
+service postgresql start
+su postgres
+psql 
+
