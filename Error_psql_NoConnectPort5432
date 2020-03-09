@@ -1,0 +1,26 @@
+Error: 
+psql: could not connect to server: No such file or directory
+    Is the server running locally and accepting
+    connections on Unix domain socket "/var/run/postgresql/.s.PGSQL.5432"?
+
+
+Solution:
+This works for me:
+
+Edit: postgresql.conf
+
+sudo nano /etc/postgresql/9.3/main/postgresql.conf
+Enable or add:
+
+listen_addresses = '*'
+Restart the database engine:
+
+sudo service postgresql restart
+Also, you can check the file pg_hba.conf
+
+sudo nano /etc/postgresql/9.3/main/pg_hba.conf
+And add your network or host address:
+
+host    all             all             192.168.1.0/24          md5
+
+
