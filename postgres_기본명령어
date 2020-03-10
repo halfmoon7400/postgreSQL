@@ -7,8 +7,15 @@ postgres=# \c pgTest;
 
 
 * show tables
-postgres=# \d
+DB 내의 Relation 확인용
+postgres=# \d   
+postgres=# \d+
+테이블 목록 확인용
+postgres=# \dt
 
+* show view
+view 조회
+postgres=# \dv
 
 *role 확인/추가/삭제 
 
