@@ -17,6 +17,17 @@ postgres=# \dt
 view 조회
 postgres=# \dv
 
+* Query 수정 및 실행
+postgres=# \e
+수정 완료 후 결과가 출력됨 
+
+* 변수 선언 
+변수의 name과 value를 사용하면 된다. 사용방법은 \set name value 로 입력하면 됩니
+postgres=# \set city seoul         변수선언 
+postgres=# \echo :city			   변수출력
+
+출처: https://nickjoit.tistory.com/59 [nickjoIT]
+
 *role 확인/추가/삭제 
 
  - Role의 목록을 확인하는 방법
