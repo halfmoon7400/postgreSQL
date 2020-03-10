@@ -1,0 +1,107 @@
+* 사용가능한  Database List (backslash el command)
+postgres-# \l
+postgres-# \list
+
+* Database 선택
+postgres=# \c pgTest;
+
+
+* show tables
+postgres=# \d
+
+
+*role 확인/추가/삭제 
+
+ - Role의 목록을 확인하는 방법
+sudo -u postgres psql
+다음 명령어 입력
+\du
+다음과 같은 결과가 출력된다
+
+                             List of roles
+ Role name |                   Attributes                   | Member of
+-----------+------------------------------------------------+-----------
+ postgres  | Superuser, Create role, Create DB, Replication | {}
+
+
+ - Role 생성 방법
+ 1. 커맨드 라인에서 생성
+sudo -u postgres createuser --interactive
+질문에 차례로 답하면 Role이 생성된다
+
+Enter name of role to add: test_role
+Shall the new role be a superuser? (y/n) n
+Shall the new role be allowed to create databases? (y/n) n
+Shall the new role be allowed to create more new roles? (y/n) n
+
+
+ 2. POSTGRESQL 프롬프트에서 생성
+PostgreSQL의 프롬프트상에서 다음 명령어를 입력한다.
+
+CREATE ROLE <role name>;
+완료되면 다음과 같은 결과가 나온다
+CREATE ROLE
+\du 명령으로 확인해 보자
+
+이렇게 생성한 Role은 기본적으로 로그인을 할 수 없다.
+로그인을 할 수 있도록 하려면 다음과 같이 입력한다
+CREATE ROLE <role name> WITH LOGIN;
+
+이미 생성된 Role에 로그인 권한을 삭제하려면 다음과 같이 입력한다
+ALTER ROLE <role name> WITH NOLOGIN;
+
+
+ - Role 삭제
+ 1. 커맨드 라인에서 삭제
+\q 명령을 입력해서 커맨드 라인으로 나간 후 다음 명령어를 입력한다.
+
+sudo -u postgres dropuser <role name>
+
+ 2. POSTGRESQL 프롬프트에서 삭제
+PostgreSQL의 프롬프트상에서 다음 명령어를 입력한다.
+
+DROP ROLE <role name>;
+완료되면 다음과 같은 결과가 나온다
+DROP ROLE
+삭제할 Role이 없을경우에 오류가 발생하는걸 피하려면 다음과 같이 입력한다.
+
+DROP ROLE IF EXISTS <role name>;
+
+ - Role 비밀번호 설정
+PostgreSQL의 프롬프트상에서 다음 명령어를 입력한다.
+
+\password <role name>
+
+ - Role에 권한 부여
+특정 테이블에 권한을 부여할 경우
+GRANT UPDATE, SELECT ON <table name> TO <role name>;
+
+ - 모든 권한을 주고싶은 경우
+GRANT ALL ON <table name> TO <role name>;
+
+ - 모든 Role에 대해서 권한을 부여할 경우
+GRANT INSERT ON <table name> TO PUBLIC;
+
+ - 데이터베이스에 모든 권한을 부여할 경우
+GRANT ALL ON DATABASE <database name> TO <role name>;
+권한을 수정한 다음엔 다음 명령으로 접근 권한을 확인해 볼 수 있다
+\z
+
+ - Role에 권한 삭제
+“REVOKE”명령으로 권한을 삭제한다.
+REVOKE INSERT ON <table name> FROM <role name>;
+
+ - 다른 Role을 사용해서 PostgreSQL에 접속
+커맨드 라인에서 다음과 같이 입력한다.
+psql <database name> <role name>
+
+단 위처럼 로그인하기 위해서는 해당 Role에 로그인 권한이 있어야 하며
+pg_hba.conf file 파일 (/etc/postgresql/9.3/main/pg_hba.conf)에서 이런 부분을
+local   all             all                                peer
+
+이렇게 수정해야 한다
+local   all             all                                md5
+
+peer : OS의 사용자 이름을 가지고 와서 데이터베이스의 사용자 이름으로 사용한다.
+수정한 후에는 리스타트 한다.
+sudo service postgresql restart
